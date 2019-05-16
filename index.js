@@ -1,20 +1,37 @@
 
-
-
+const notes = [
+    'C4', 'E4', 'G4', 'B4'
+]
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('button').addEventListener('click', playSound)
+    document.addEventListener('click', () => {
+        playSound()
 
+    })
 });
 
 
 
-
 function playSound() {
-    console.log("You clicked me")
-    //create a synth and connect it to the master output (your speakers)
-    var synth = new Tone.Synth().toMaster();
+    //instantiate a new synth
+    
+    console.log(Tone.Transport.bpm.value)
+    
+    const synth = new Tone.Synth()
+    synth.toMaster();
+    
+    Tone.Transport.schedule(function(time){
+        for (let note of notes) {
+            synth.triggerAttackRelease(note, '8n', time)
+            console.log(time)
+        }
+    }, "8n");
+    
+    Tone.Transport.start();
+    setTimeout(500, () => {
+        Tone.Transport.stop();
+    })
+};
 
-    //play a middle 'C' for the duration of an 8th note
-    synth.triggerAttackRelease("C4", "8n");
-}
+
+
